@@ -14,17 +14,23 @@ namespace SimpleHeartBeatService
 {
     public class HeartBeat
     {
-
         private readonly Timer _timer;
-        private FileHelper FileHelperObj;
-
+        private int dailyTimeInSec;
+ 
         public HeartBeat()
         {
 
             _timer = new Timer(1000) { AutoReset = true };
             _timer.Elapsed += TimerElapsed;
 
-            FileHelperObj = new FileHelper();
+            if (FileHelper.IsLastAccessToday())
+            {
+                dailyTimeInSec = FileHelper.GetRemainingTime();
+            }
+            else
+            {
+                dailyTimeInSec = FileHelper.GetDailyTimeInSekFromSettings();
+            }
 
         }
 
@@ -32,22 +38,21 @@ namespace SimpleHeartBeatService
         {
             try
             {
-                if (FileHelperObj.GetRemainingTimeInSec() < 0)
+                if (dailyTimeInSec> 0)
+                {
+                    dailyTimeInSec--;
+                    FileHelper.SetRemainingTime(dailyTimeInSec);
+                }
+                else
                 {
                     _timer.Stop();
                     Console.WriteLine("Time is over.");
                 }
-                else
-                {
-                    FileHelperObj.SetElapsedTime();
-                }
-
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-
         }
 
         public void Start()
@@ -59,6 +64,8 @@ namespace SimpleHeartBeatService
         {
             _timer.Stop();
         }
+
+
 
     }
 }

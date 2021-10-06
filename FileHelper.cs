@@ -8,49 +8,28 @@ using System.Threading.Tasks;
 
 namespace SimpleHeartBeatService
 {
-    public class FileHelper
+    public static class FileHelper
     {
-        const int DEFAULTDAILYTIMEMIN = 5;
         const string NAMETEMPFILE = "HeartBeatTemp.txt";
-        private int DailyTimeInSec;
-        private int ElapsedTimeSec;
 
-        public FileHelper()
+        public static bool IsLastAccessToday()
         {
-            DailyTimeInSec = GetDailyTimeInSekFromSettings();
-
             if (!DateTime.Today.AddDays(0).Day.Equals(File.GetLastAccessTime(NAMETEMPFILE).Day))
             {
-                ElapsedTimeSec = 0;
+                return true;
             }
             else
             {
-                ElapsedTimeSec = GetElapsedTime();
+                return false;
             }
         }
 
 
-        public int GetRemainingTimeInSec()
+        public static void SetRemainingTime(int remainingTimeSec)
         {
             try
             {
-                return DailyTimeInSec - ElapsedTimeSec;
-                
-            }
-            catch (Exception)
-            {
-
-                //TODO error to log4net //System.Diagnose
-            }
-            return 0;
-        }
-
-        public void SetElapsedTime()
-        {
-            try
-            {
-                ElapsedTimeSec++;
-                File.WriteAllText(NAMETEMPFILE, ElapsedTimeSec.ToString());
+                File.WriteAllText(NAMETEMPFILE, remainingTimeSec.ToString());
             }
             catch (IOException)
             {
@@ -58,13 +37,13 @@ namespace SimpleHeartBeatService
             }
         }
 
-        private int GetElapsedTime()
+        public static int GetRemainingTime()
         {
-            int sec = DailyTimeInSec;
+            var sec = 1000000;
             try
             {
-                var elapsedTimeFromFile = File.ReadLines(NAMETEMPFILE).Single<string>();
-                sec =int.Parse(elapsedTimeFromFile);
+                var remainingTimeFromFile = File.ReadLines(NAMETEMPFILE).Single<string>();
+                sec =int.Parse(remainingTimeFromFile);
             }
             catch (IOException ex)
             {
@@ -77,9 +56,9 @@ namespace SimpleHeartBeatService
             return sec;
         }
 
-        private static int GetDailyTimeInSekFromSettings()
+        public static int GetDailyTimeInSekFromSettings()
         {
-            int min = DEFAULTDAILYTIMEMIN;
+            int min=0;
             try
             {
                 var configDailyTime = ConfigurationManager.AppSettings["DailyTimeMinutes"];
