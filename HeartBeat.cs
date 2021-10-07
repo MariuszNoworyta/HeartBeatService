@@ -47,6 +47,7 @@ namespace SimpleHeartBeatService
                 {
                     _timer.Stop();
                     Console.WriteLine("Time is over.");
+                    WindowsHelper.Logout();
                 }
             }
             catch (Exception ex)

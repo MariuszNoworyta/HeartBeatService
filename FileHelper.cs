@@ -14,7 +14,7 @@ namespace SimpleHeartBeatService
 
         public static bool IsLastAccessToday()
         {
-            if (!DateTime.Today.AddDays(0).Day.Equals(File.GetLastAccessTime(NAMETEMPFILE).Day))
+            if (DateTime.Today.AddDays(0).Day.Equals(File.GetLastAccessTime(NAMETEMPFILE).Day))
             {
                 return true;
             }
