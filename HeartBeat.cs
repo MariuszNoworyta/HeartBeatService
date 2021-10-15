@@ -17,7 +17,8 @@ namespace SimpleHeartBeatService
         private readonly Timer _timer;
         private readonly int dailyMax;
         private int dailyTimeInSec;
- 
+        private WindowsHelper winHelp;
+
         public HeartBeat()
         {
 
@@ -32,6 +33,7 @@ namespace SimpleHeartBeatService
             {
                 dailyMax =dailyTimeInSec = FileHelper.GetDailyTimeInSekFromSettings();
             }
+            winHelp = new WindowsHelper();
 
         }
 
@@ -43,7 +45,7 @@ namespace SimpleHeartBeatService
                 {
                     dailyTimeInSec--;
                     FileHelper.SetRemainingTime(dailyTimeInSec);
-                    WindowsHelper.DrawTextOnScreen(RemainingTime(dailyMax, dailyTimeInSec));
+                    winHelp.DrawTextOnScreen(RemainingTime(dailyMax, dailyTimeInSec));
                 }
                 else
                 {
@@ -75,7 +77,7 @@ namespace SimpleHeartBeatService
             var min = (remainingTime % 3600) / 60;
             var sek = (remainingTime % 3600) % 60;
 
-            return String.Format("{0}:{1}:{2}", hours, min, sek);
+            return String.Format("{0:D2}:{1:D2}:{2:D2}", hours, min, sek);
         }
     }
 }

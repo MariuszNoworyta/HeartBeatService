@@ -47,6 +47,7 @@ namespace SimpleHeartBeatService
             }
             catch (IOException ex)
             {
+                sec = 60;
                 //TODO error to log4net //System.Diagnose
             }
             catch (Exception ex)
@@ -67,6 +68,7 @@ namespace SimpleHeartBeatService
             }
             catch (ConfigurationErrorsException ex)
             {
+                min = 5;
 
                 //TODO error to log4net //System.Diagnose
 
