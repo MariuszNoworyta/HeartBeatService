@@ -12,7 +12,7 @@ using System.Threading;
 
 namespace SimpleHeartBeatService
 {
-    public class HeartBeat
+    public class HeartBeat:IDisposable
     {
         private readonly Timer _timer;
         private readonly int dailyMax;
@@ -78,6 +78,11 @@ namespace SimpleHeartBeatService
             var sek = (remainingTime % 3600) % 60;
 
             return String.Format("{0:D2}:{1:D2}:{2:D2}", hours, min, sek);
+        }
+
+        public void Dispose()
+        {
+            this.Stop();
         }
     }
 }

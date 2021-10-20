@@ -113,14 +113,22 @@ namespace SimpleHeartBeatService
         
         public static void Logout()
         {
-            Console.WriteLine("Logout");
             ExitWindowsEx((uint)(ExitWindows.LogOff|ExitWindows.Force), 10);
         }
 
         public void DrawTextOnScreen(string text)
         {
-            graph.Clear(bgColor);
-            graph.DrawString(text, font, foreColor, xy);
+            try
+            {
+                graph.Clear(bgColor);
+                graph.DrawString(text, font, foreColor, xy);
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.Message);
+            }
+
 
         }
 
