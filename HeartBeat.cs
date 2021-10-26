@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
-using System.Windows.Forms;
 using Timer = System.Timers.Timer;
 using System.Threading;
 
@@ -17,11 +11,11 @@ namespace SimpleHeartBeatService
         private readonly Timer _timer;
         private readonly int dailyMax;
         private int dailyTimeInSec;
-        private WindowsHelper winHelp;
+        private WindowsHelper wh;
+
 
         public HeartBeat()
         {
-
             _timer = new Timer(1000) { AutoReset = true };
             _timer.Elapsed += TimerElapsed;
 
@@ -33,8 +27,12 @@ namespace SimpleHeartBeatService
             {
                 dailyMax =dailyTimeInSec = FileHelper.GetDailyTimeInSekFromSettings();
             }
-            winHelp = new WindowsHelper();
 
+            if (dailyTimeInSec<=0)
+            {
+                dailyTimeInSec = FileHelper.GetExtraTimeFromSettings();
+            }
+            wh = new WindowsHelper();
         }
 
         private void TimerElapsed(object sender, ElapsedEventArgs e)
@@ -43,9 +41,11 @@ namespace SimpleHeartBeatService
             {
                 if (dailyTimeInSec> 0)
                 {
+                    Console.WriteLine($"TimerElapsed{Thread.CurrentThread.ManagedThreadId}");
                     dailyTimeInSec--;
                     FileHelper.SetRemainingTime(dailyTimeInSec);
-                    winHelp.DrawTextOnScreen(RemainingTime(dailyMax, dailyTimeInSec));
+                    var str = RemainingTime(dailyMax, dailyTimeInSec);
+                    wh.DrawTextOnScreenNew(str);
                 }
                 else
                 {
@@ -58,7 +58,7 @@ namespace SimpleHeartBeatService
             {
                 Console.WriteLine(ex.Message);
             }
-        }
+        } 
 
         public void Start()
         {

@@ -80,5 +80,27 @@ namespace SimpleHeartBeatService
             return min * 60;
         }
 
+        public static int GetExtraTimeFromSettings()
+        {
+            int min = 0;
+            try
+            {
+                var configDailyTime = ConfigurationManager.AppSettings["ExtraTime"];
+                min = Int32.Parse(configDailyTime);
+            }
+            catch (ConfigurationErrorsException ex)
+            {
+                min = 5;
+
+                //TODO error to log4net //System.Diagnose
+
+            }
+            catch (Exception ex)
+            {
+                //TODO error to log4net //System.Diagnose
+            }
+            return min * 60;
+        }
+
     }
 }

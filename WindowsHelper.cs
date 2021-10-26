@@ -70,68 +70,32 @@ namespace SimpleHeartBeatService
 
     public class WindowsHelper
     {
-
-        readonly Color bgColor = Color.Orange;
-        readonly Brush foreColor = Brushes.DarkOrange;
-        static Form form;
-        static Graphics graph;
-        static Font font;
-        static Point xy;
-
-
-
-        public WindowsHelper()
-        {
-            CreateForm();
-            CreateGraphic();
-        }
-
-        private void CreateGraphic()
-        {
-            graph = form.CreateGraphics();
-            font = new Font("Arial", 20);
-            xy = new Point();
-            xy.X = xy.Y = 0;
-        }
-
-        private void CreateForm()
-        {
-            form = new Form();
-            form.BackColor = bgColor;
-            form.TransparencyKey = bgColor;
-            form.TopMost = true;
-            form.StartPosition = FormStartPosition.Manual;
-            form.Left = form.Top = 5;
-            form.Width = form.Height = 50;
-            form.FormBorderStyle = FormBorderStyle.None;
-            form.ShowIcon = false;            
-            form.Show();
-        }
-
         [DllImport("user32.dll", SetLastError = true)]
         static extern bool ExitWindowsEx(uint uFlags, uint dwReason);
-        
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern IntPtr GetDC(IntPtr hwnd);
+
+
+        readonly SolidBrush bgColor = new SolidBrush(Color.Black);
+        readonly Brush foreColor = Brushes.DarkOrange;
+        readonly Graphics graph;
+        readonly Font font = new Font("Arial", 20);
+        readonly static Point xy = new Point() { X = 50, Y = 50 };
+        readonly Rectangle rect = new Rectangle(xy, new Size(130, 30));
+
         public static void Logout()
         {
             ExitWindowsEx((uint)(ExitWindows.LogOff|ExitWindows.Force), 10);
         }
 
-        public void DrawTextOnScreen(string text)
+        public void DrawTextOnScreenNew(string text)
         {
-            try
+            var hwnd = GetDC(IntPtr.Zero);
+            using (Graphics g = Graphics.FromHdc(hwnd))
             {
-                graph.Clear(bgColor);
-                graph.DrawString(text, font, foreColor, xy);
+                g.FillRectangle(bgColor, rect);
+                g.DrawString(text, font, foreColor, xy);
             }
-            catch (Exception ex)
-            {
-
-                Console.WriteLine(ex.Message);
-            }
-
-
         }
-
-
     }
 }

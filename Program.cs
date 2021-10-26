@@ -19,9 +19,10 @@ namespace SimpleHeartBeatService
             {
                 hb.Start();
 
-                while (true) {
-                    Thread.Sleep(100000);
-                };
+                while (true)
+                {
+                    Thread.Sleep(10000);
+                }
             }
         }
     }
