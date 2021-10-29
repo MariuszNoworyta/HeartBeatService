@@ -79,9 +79,9 @@ namespace SimpleHeartBeatService
         readonly SolidBrush bgColor = new SolidBrush(Color.Black);
         readonly Brush foreColor = Brushes.DarkOrange;
         readonly Graphics graph;
-        readonly Font font = new Font("Arial", 20);
-        readonly static Point xy = new Point() { X = 50, Y = 50 };
-        readonly Rectangle rect = new Rectangle(xy, new Size(130, 30));
+        readonly Font font = new Font("Arial", 16);
+        readonly static Point xy = new Point() { X = 10, Y = 10 };
+        readonly Rectangle rect = new Rectangle(xy, new Size(180, 20));
 
         public static void Logout()
         {

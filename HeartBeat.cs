@@ -43,14 +43,19 @@ namespace SimpleHeartBeatService
                 {
                     Console.WriteLine($"TimerElapsed{Thread.CurrentThread.ManagedThreadId}");
                     dailyTimeInSec--;
-                    FileHelper.SetRemainingTime(dailyTimeInSec);
-                    var str = RemainingTime(dailyMax, dailyTimeInSec);
+                    var str = $"Logout in {RemainingTime(dailyMax, dailyTimeInSec)}";
                     wh.DrawTextOnScreenNew(str);
+                    if (dailyTimeInSec % 60==0)
+                    {
+                        FileHelper.SetRemainingTime(dailyTimeInSec);
+                    }
                 }
                 else
                 {
                     _timer.Stop();
                     Console.WriteLine("Time is over.");
+                    wh.DrawTextOnScreenNew("Time is over.");
+                    Thread.Sleep(5000);
                     WindowsHelper.Logout();
                 }
             }
