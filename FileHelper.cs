@@ -10,11 +10,16 @@ namespace SimpleHeartBeatService
 {
     public static class FileHelper
     {
-        const string NAMETEMPFILE = "HeartBeatTemp.txt";
+        const string NAMETEMPFILE = ".HeartBeatTemp.txt";
+        private static string userDirPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        private static string fullPathToTemplateFile = Path.Combine(userDirPath, NAMETEMPFILE);
+
 
         public static bool IsLastAccessToday()
         {
-            if (DateTime.Today.AddDays(0).Day.Equals(File.GetLastAccessTime(NAMETEMPFILE).Day))
+
+            Console.WriteLine(fullPathToTemplateFile);
+            if (DateTime.Today.AddDays(0).Day.Equals(File.GetLastWriteTime(fullPathToTemplateFile).Day))
             {
                 return true;
             }
@@ -29,7 +34,7 @@ namespace SimpleHeartBeatService
         {
             try
             {
-                File.WriteAllText(NAMETEMPFILE, remainingTimeSec.ToString());
+                File.WriteAllText(fullPathToTemplateFile, remainingTimeSec.ToString());
             }
             catch (IOException)
             {
@@ -39,10 +44,10 @@ namespace SimpleHeartBeatService
 
         public static int GetRemainingTime()
         {
-            var sec = 1000000;
+            var sec = 60;
             try
             {
-                var remainingTimeFromFile = File.ReadLines(NAMETEMPFILE).Single<string>();
+                var remainingTimeFromFile = File.ReadLines(fullPathToTemplateFile).Single<string>();
                 sec =int.Parse(remainingTimeFromFile);
             }
             catch (IOException ex)

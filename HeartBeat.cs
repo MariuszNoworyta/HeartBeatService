@@ -19,19 +19,20 @@ namespace SimpleHeartBeatService
             _timer = new Timer(1000) { AutoReset = true };
             _timer.Elapsed += TimerElapsed;
 
+
             if (FileHelper.IsLastAccessToday())
             {
                 dailyTimeInSec = FileHelper.GetRemainingTime();
+                if (dailyTimeInSec <= 0)
+                {
+                    dailyTimeInSec = FileHelper.GetExtraTimeFromSettings();
+                }
             }
             else
             {
                 dailyMax =dailyTimeInSec = FileHelper.GetDailyTimeInSekFromSettings();
             }
 
-            if (dailyTimeInSec<=0)
-            {
-                dailyTimeInSec = FileHelper.GetExtraTimeFromSettings();
-            }
             wh = new WindowsHelper();
         }
 
